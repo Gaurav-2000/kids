@@ -143,7 +143,13 @@ export async function POST(request: NextRequest) {
         shippingAddress: JSON.stringify(shippingAddress),
         paymentMethod,
         items: {
-          create: items.map((item: any) => ({
+          create: items.map((item: {
+            productId: string;
+            quantity: number;
+            price: number;
+            size?: string;
+            color?: string;
+          }) => ({
             productId: item.productId,
             quantity: item.quantity,
             price: item.price,

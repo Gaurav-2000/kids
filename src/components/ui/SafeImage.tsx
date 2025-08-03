@@ -17,7 +17,7 @@ interface SafeImageProps {
 
 const SafeImage = ({ 
   src, 
-  alt, 
+  alt = '', // Default to empty string if not provided
   fill, 
   className, 
   priority, 

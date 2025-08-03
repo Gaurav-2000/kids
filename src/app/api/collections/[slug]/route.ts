@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { Prisma } from '@prisma/client';
 
 export async function GET(
   request: NextRequest,
@@ -20,7 +21,7 @@ export async function GET(
     const skip = (page - 1) * limit;
 
     // Build where clause
-    const where: any = {};
+    const where: Prisma.ProductWhereInput = {};
 
     // Handle different collection types
     if (slug === 'boys' || slug === 'girls' || slug === 'infant') {

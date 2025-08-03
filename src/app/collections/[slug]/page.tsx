@@ -1,12 +1,20 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import ProductCard from '@/components/product/ProductCard';
-import { Filter, Grid, List } from 'lucide-react';
+import { Grid, List } from 'lucide-react';
+
+interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 interface Product {
   id: string;
@@ -17,6 +25,14 @@ interface Product {
   images: string[];
   averageRating: number;
   reviewCount: number;
+  sizes: string[];
+  colors: string[];
+  stock: number;
+  featured: boolean;
+  categoryId: string;
+  category: Category;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 interface Collection {
@@ -38,9 +54,10 @@ interface CollectionData {
 
 export default function CollectionPage() {
   const params = useParams();
-  const searchParams = useSearchParams();
+  // const searchParams = useSearchParams();
   const slug = params.slug as string;
   
+
   const [data, setData] = useState<CollectionData | null>(null);
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -48,11 +65,7 @@ export default function CollectionPage() {
   const [sortOrder, setSortOrder] = useState('desc');
   const [currentPage, setCurrentPage] = useState(1);
 
-  useEffect(() => {
-    fetchCollection();
-  }, [slug, sortBy, sortOrder, currentPage]);
-
-  const fetchCollection = async () => {
+  const fetchCollection = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams({
@@ -60,10 +73,8 @@ export default function CollectionPage() {
         sortBy,
         sortOrder
       });
-      
       const response = await fetch(`/api/collections/${slug}?${params}`);
       const result = await response.json();
-      
       if (result.success) {
         setData(result.data);
       }
@@ -72,7 +83,12 @@ export default function CollectionPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [slug, sortBy, sortOrder, currentPage]);
+
+  useEffect(() => {
+    fetchCollection();
+  }, [fetchCollection]);
+
 
   const handleSortChange = (newSortBy: string, newSortOrder: string) => {
     setSortBy(newSortBy);
@@ -107,7 +123,7 @@ export default function CollectionPage() {
         <main className="container mx-auto px-4 py-8">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-gray-900 mb-4">Collection Not Found</h1>
-            <p className="text-gray-600 mb-8">The collection you're looking for doesn't exist.</p>
+            <p className="text-gray-600 mb-8">The collection you&apos;re looking for doesn&apos;t exist.</p>
             <Link href="/collections" className="bg-orange-500 text-white px-6 py-3 rounded-lg hover:bg-orange-600 transition-colors">
               Browse All Collections
             </Link>
@@ -185,13 +201,27 @@ export default function CollectionPage() {
               ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' 
               : 'grid-cols-1'
           }`}>
-            {data.products.map((product) => (
-              <ProductCard 
-                key={product.id} 
-                product={product} 
-                viewMode={viewMode}
-              />
-            ))}
+            {data.products.map((product) => {
+              // Provide missing fields with defaults for ProductCard
+              const productWithDefaults = {
+                ...product,
+                sizes: product.sizes || ['One Size'],
+                colors: product.colors || ['Default'],
+                stock: typeof product.stock === 'number' ? product.stock : 10,
+                featured: typeof product.featured === 'boolean' ? product.featured : false,
+                categoryId: product.categoryId || 'default',
+                category: product.category || { id: 'default', name: 'Default', slug: 'default', createdAt: new Date(), updatedAt: new Date() },
+                createdAt: product.createdAt || new Date(),
+                updatedAt: product.updatedAt || new Date(),
+              };
+              return (
+                <ProductCard
+                  key={product.id}
+                  product={productWithDefaults}
+                  viewMode={viewMode}
+                />
+              );
+            })}
           </div>
         ) : (
           <div className="text-center py-16">

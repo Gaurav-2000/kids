@@ -76,7 +76,7 @@ export async function seedDatabase() {
 
     // Create admin user
     const hashedPassword = await bcrypt.hash('admin123', 12);
-    const adminUser = await db.user.upsert({
+    await db.user.upsert({
       where: { email: 'admin@littlestart.com' },
       update: {},
       create: {
@@ -405,7 +405,7 @@ export async function seedDatabase() {
 
     // Create a test user
     const testUserPassword = await bcrypt.hash('password123', 12);
-    const testUser = await db.user.upsert({
+    await db.user.upsert({
       where: { email: 'test@example.com' },
       update: {},
       create: {

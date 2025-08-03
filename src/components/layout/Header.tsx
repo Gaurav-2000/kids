@@ -4,8 +4,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
-import { Search, Menu, X, User, Heart, LogOut, Star, Users, Tag } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Search, Menu, X, User, Heart, LogOut } from 'lucide-react';
+
 import SafeImage from '@/components/ui/SafeImage';
 import MiniCart from '@/components/cart/MiniCart';
 

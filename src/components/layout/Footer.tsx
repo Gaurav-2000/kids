@@ -176,7 +176,7 @@ const Footer = () => {
         <div className="border-t border-gray-700 mt-8 pt-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
             <div>
-              <div className="text-sm font-medium">Kid's Favourite Characters</div>
+              <div className="text-sm font-medium">Kid&#39;s Favourite Characters</div>
             </div>
             <div>
               <div className="text-sm font-medium">Made Proudly in India</div>

@@ -70,7 +70,7 @@ export default function OrderSuccessPage() {
                 </div>
                 <h3 className="font-medium text-gray-900 mb-2">Order Confirmation</h3>
                 <p className="text-sm text-gray-600">
-                  You'll receive an email confirmation with your order details shortly.
+                  You&apos;ll receive an email confirmation with your order details shortly.
                 </p>
               </div>
               
@@ -80,7 +80,7 @@ export default function OrderSuccessPage() {
                 </div>
                 <h3 className="font-medium text-gray-900 mb-2">Order Processing</h3>
                 <p className="text-sm text-gray-600">
-                  We'll prepare your order and send you tracking information.
+                  We&apos;ll prepare your order and send you tracking information.
                 </p>
               </div>
               
