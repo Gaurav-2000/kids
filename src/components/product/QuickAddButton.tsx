@@ -80,12 +80,12 @@ export default function QuickAddButton({
       onClick={handleQuickAdd}
       disabled={isAdding}
       className={`
-        absolute top-2 right-2 z-10 
-        w-8 h-8 rounded-full 
+        absolute top-2 right-2 z-10
+        w-10 h-10 md:w-8 md:h-8 rounded-full
         flex items-center justify-center
         transition-all duration-200
-        ${isAdded 
-          ? 'bg-green-500 text-white' 
+        ${isAdded
+          ? 'bg-green-500 text-white'
           : 'bg-white/90 hover:bg-orange-500 text-gray-700 hover:text-white'
         }
         shadow-md hover:shadow-lg
@@ -95,11 +95,11 @@ export default function QuickAddButton({
       title={isAdded ? 'Added to cart!' : 'Quick add to cart'}
     >
       {isAdding ? (
-        <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+        <div className="w-5 h-5 md:w-4 md:h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
       ) : isAdded ? (
-        <Check className="w-4 h-4" />
+        <Check className="w-5 h-5 md:w-4 md:h-4" />
       ) : (
-        <Plus className="w-4 h-4" />
+        <Plus className="w-5 h-5 md:w-4 md:h-4" />
       )}
     </button>
   );

@@ -146,7 +146,9 @@ const ProductCard = ({ product, viewMode = 'grid' }: ProductCardProps) => {
           {/* Wishlist Button */}
           <button
             onClick={handleWishlistToggle}
-            className="absolute top-2 right-2 z-10 p-2 bg-white rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            className={`absolute z-10 p-2 bg-white rounded-full shadow-md opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 ${
+              hasDiscount ? 'top-12 right-2' : 'top-2 right-2'
+            }`}
             aria-label="Add to wishlist"
           >
             <Heart
@@ -187,8 +189,17 @@ const ProductCard = ({ product, viewMode = 'grid' }: ProductCardProps) => {
             </div>
           )}
 
-          {/* Quick Add to Cart */}
-          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/50 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          {/* Mobile Quick Add Button */}
+          <button
+            onClick={handleAddToCart}
+            className="absolute bottom-2 right-2 z-10 md:hidden bg-orange-500 text-white p-3 rounded-full shadow-lg hover:bg-orange-600 transition-colors"
+            aria-label="Quick add to cart"
+          >
+            <ShoppingCart size={18} />
+          </button>
+
+          {/* Desktop Quick Add to Cart */}
+          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/50 to-transparent p-4 opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 hidden md:block">
             <button
               onClick={handleAddToCart}
               className="w-full bg-white text-gray-900 py-2 px-4 rounded-lg font-medium hover:bg-gray-100 transition-colors flex items-center justify-center space-x-2"
