@@ -69,12 +69,21 @@ export async function GET(request: NextRequest) {
       db.product.count({ where })
     ]);
 
-    // Parse JSON fields
+    // Parse JSON fields safely
+    const safeParse = (val: string | null | undefined) => {
+      if (!val || typeof val !== 'string') return [];
+      try {
+        return JSON.parse(val);
+      } catch {
+        return [];
+      }
+    };
+
     const productsWithParsedFields = products.map(product => ({
       ...product,
-      images: JSON.parse(product.images || '[]'),
-      sizes: JSON.parse(product.sizes || '[]'),
-      colors: JSON.parse(product.colors || '[]'),
+      images: safeParse(product.images),
+      sizes: safeParse(product.sizes),
+      colors: safeParse(product.colors),
       reviewCount: product._count.reviews
     }));
 
