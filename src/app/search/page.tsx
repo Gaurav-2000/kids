@@ -261,13 +261,21 @@ function SearchPageContent() {
                     ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' 
                     : 'grid-cols-1'
                 }`}>
-                  {data.products.map((product) => (
-                    <ProductCard 
-                      key={product.id} 
-                      product={product} 
-                      viewMode={viewMode}
-                    />
-                  ))}
+                  {data.products.map((product) => {
+                    // Create clean product object without rating fields to prevent display issues
+                    const cleanProduct = {
+                      ...product,
+                      averageRating: undefined,
+                      reviewCount: undefined,
+                    };
+                    return (
+                      <ProductCard
+                        key={product.id}
+                        product={cleanProduct}
+                        viewMode={viewMode}
+                      />
+                    );
+                  })}
                 </div>
 
                 {/* Pagination */}

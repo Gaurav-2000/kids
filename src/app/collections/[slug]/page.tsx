@@ -213,6 +213,9 @@ export default function CollectionPage() {
                 category: product.category || { id: 'default', name: 'Default', slug: 'default', createdAt: new Date(), updatedAt: new Date() },
                 createdAt: product.createdAt || new Date(),
                 updatedAt: product.updatedAt || new Date(),
+                // Remove averageRating and reviewCount to prevent display issues
+                averageRating: undefined,
+                reviewCount: undefined,
               };
               return (
                 <ProductCard
