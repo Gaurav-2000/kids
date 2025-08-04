@@ -268,6 +268,18 @@ const ProductCard = ({ product, viewMode = 'grid' }: ProductCardProps) => {
           )}
         </div>
       </Link>
+
+      {/* Mobile Add to Cart Button */}
+      <div className="p-4 pt-0 md:hidden">
+        <button
+          onClick={handleAddToCart}
+          disabled={product.stock === 0}
+          className="w-full bg-orange-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-orange-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+        >
+          <ShoppingCart size={16} />
+          <span>{product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}</span>
+        </button>
+      </div>
     </div>
   );
 };

@@ -7,7 +7,8 @@ import Footer from '@/components/layout/Footer';
 import ProductCard from '@/components/product/ProductCard';
 import SafeImage from '@/components/ui/SafeImage';
 import QuickAddButton from '@/components/product/QuickAddButton';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ShoppingCart } from 'lucide-react';
+import { useCart } from '@/contexts/CartContext';
 
 // Mock data matching Little Start products
 const newArrivalsProducts = [
@@ -189,6 +190,7 @@ const homeWearProducts = [
 export default function Home() {
   const [activeTab, setActiveTab] = useState('new-arrivals');
   const [currentSlide, setCurrentSlide] = useState(0);
+  const { addItem } = useCart();
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % 4);
@@ -595,8 +597,8 @@ export default function Home() {
                   image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=400&fit=crop&crop=center'
                 }
               ].map((product) => (
-                <Link key={product.id} href={`/products/${product.slug}`} className="group">
-                  <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+                <div key={product.id} className="group bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+                  <Link href={`/products/${product.slug}`}>
                     <div className="relative aspect-square">
                       {product.salePrice && (
                         <div className="absolute top-2 left-2 z-10 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
@@ -617,6 +619,8 @@ export default function Home() {
                         className="object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                     </div>
+                  </Link>
+                  <Link href={`/products/${product.slug}`}>
                     <div className="p-4">
                       <h3 className="font-medium text-sm mb-2 line-clamp-2 group-hover:text-orange-600 transition-colors">{product.name}</h3>
                       <div className="text-xs text-gray-500 mb-2">No reviews</div>
@@ -631,8 +635,39 @@ export default function Home() {
                         )}
                       </div>
                     </div>
+                  </Link>
+
+                  {/* Mobile Add to Cart Button */}
+                  <div className="p-4 pt-0 md:hidden">
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        // Create a product object compatible with the cart
+                        const cartProduct = {
+                          id: product.id,
+                          name: product.name,
+                          slug: product.slug,
+                          price: product.price,
+                          salePrice: product.salePrice,
+                          images: [product.image],
+                          sizes: ['One Size'],
+                          colors: ['Default'],
+                          stock: 10,
+                          featured: false,
+                          categoryId: 'default',
+                          category: { id: 'default', name: 'Default', slug: 'default', createdAt: new Date(), updatedAt: new Date() },
+                          createdAt: new Date(),
+                          updatedAt: new Date(),
+                        };
+                        addItem(cartProduct, 1, 'One Size', 'Default');
+                      }}
+                      className="w-full bg-orange-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-orange-600 transition-colors flex items-center justify-center space-x-2"
+                    >
+                      <ShoppingCart size={16} />
+                      <span>Add to Cart</span>
+                    </button>
                   </div>
-                </Link>
+                </div>
               ))}
             </div>
 
