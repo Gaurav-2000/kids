@@ -17,7 +17,7 @@ const newArrivalsProducts = [
     slug: 'tom-and-jerry-high-five-co-ord-set',
     description: 'Comfortable co-ord set featuring Tom and Jerry characters',
     price: 990,
-    salePrice: undefined,
+    salePrice: 0,
     images: ['https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&h=400&fit=crop&crop=center'],
     sizes: ['2-3Y', '3-4Y', '4-5Y', '5-6Y'],
     colors: ['Blue', 'Red'],
@@ -34,7 +34,7 @@ const newArrivalsProducts = [
     slug: 'lion-king-girls-shorts-set',
     description: 'Beautiful Lion King themed shorts set for girls',
     price: 990,
-    salePrice: undefined,
+    salePrice: 0,
     images: ['https://images.unsplash.com/photo-1544717297-fa95b6ee9643?w=400&h=400&fit=crop&crop=center'],
     sizes: ['2-3Y', '3-4Y', '4-5Y', '5-6Y'],
     colors: ['Pink', 'Yellow'],
@@ -51,7 +51,7 @@ const newArrivalsProducts = [
     slug: 'quidditch-07-harry-potter-t-shirt',
     description: 'Official Harry Potter Quidditch themed t-shirt',
     price: 650,
-    salePrice: undefined,
+    salePrice: 0,
     images: ['https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop&crop=center'],
     sizes: ['2-3Y', '3-4Y', '4-5Y', '5-6Y'],
     colors: ['Maroon', 'Black'],
@@ -68,7 +68,7 @@ const newArrivalsProducts = [
     slug: 'smiley-world-colourblock-heart-girls-co-ord-set',
     description: 'Cheerful Smiley World co-ord set with colorblock heart design',
     price: 1290,
-    salePrice: undefined,
+    salePrice: 0,
     images: ['https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=400&h=400&fit=crop&crop=center'],
     sizes: ['2-3Y', '3-4Y', '4-5Y', '5-6Y'],
     colors: ['Pink', 'Purple', 'Blue'],
@@ -85,7 +85,7 @@ const newArrivalsProducts = [
     slug: 'pikachu-electrifying-jogger-set',
     description: 'Electric Pikachu themed jogger set for active kids',
     price: 1290,
-    salePrice: undefined,
+    salePrice: 0,
     images: ['https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=400&fit=crop&crop=center'],
     sizes: ['2-3Y', '3-4Y', '4-5Y', '5-6Y'],
     colors: ['Yellow', 'Blue'],
@@ -102,7 +102,7 @@ const newArrivalsProducts = [
     slug: 'tom-and-jerry-running-classic-co-ord-set',
     description: 'Classic Tom and Jerry running themed co-ord set',
     price: 890,
-    salePrice: undefined,
+    salePrice: 0,
     images: ['https://images.unsplash.com/photo-1596464716127-f2a82984de30?w=400&h=400&fit=crop&crop=center'],
     sizes: ['2-3Y', '3-4Y', '4-5Y', '5-6Y'],
     colors: ['Blue', 'Red'],
@@ -119,7 +119,7 @@ const newArrivalsProducts = [
     slug: 'chase-raglan-jogger-set',
     description: 'Paw Patrol Chase themed raglan jogger set',
     price: 1049,
-    salePrice: undefined,
+    salePrice: 0,
     images: ['https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=400&h=400&fit=crop&crop=center'],
     sizes: ['2-3Y', '3-4Y', '4-5Y', '5-6Y'],
     colors: ['Blue', 'Navy'],
@@ -136,7 +136,7 @@ const newArrivalsProducts = [
     slug: 'the-lion-king-simba-iconic-shorts-set',
     description: 'Iconic Lion King Simba themed shorts set',
     price: 890,
-    salePrice: undefined,
+    salePrice: 0,
     images: ['https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=400&h=400&fit=crop&crop=center'],
     sizes: ['2-3Y', '3-4Y', '4-5Y', '5-6Y'],
     colors: ['Orange', 'Yellow'],
@@ -490,7 +490,7 @@ export default function Home() {
               <div className="text-center lg:text-left">
                 <h2 className="text-4xl lg:text-5xl font-bold mb-6 text-gray-900">CHARACTER WORLD</h2>
                 <p className="text-lg text-gray-600 mb-8 max-w-md mx-auto lg:mx-0">
-                  Home to all your kid's favorite characters—wrapped in comfy, summer style! 🌞✨
+                  Home to all your kid&apos;s favorite characters—wrapped in comfy, summer style! 🌞✨
                 </p>
                 <Link
                   href="/collections/character-world"
@@ -687,7 +687,7 @@ export default function Home() {
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-3xl font-bold mb-4 text-gray-900">Why shop from us?</h2>
             <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
-              Stylish, Functional, & Value for money, That's the Little Start promises!<br />
+              Stylish, Functional, & Value for money, That&apos;s the Little Start promises!<br />
               Thoughtfully designed fashion meets Comfort. Our collection is so buttery soft, your kids will want to wear them All Day - All Night!
             </p>
 
@@ -700,7 +700,7 @@ export default function Home() {
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               <div className="text-center">
-                <div className="text-lg font-semibold text-gray-900">Kid's Favourite Characters</div>
+                <div className="text-lg font-semibold text-gray-900">Kid&apos;s Favourite Characters</div>
               </div>
               <div className="text-center">
                 <div className="text-lg font-semibold text-gray-900">Made Proudly in India</div>

@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import { db } from '@/lib/db';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
+    // @ts-expect-error - NextAuth v4 compatibility with Next.js 15
     const session = await getServerSession(authOptions);
     
-    if (!session?.user?.email) {
+    if (!session || !(session as { user?: { email?: string } }).user?.email) {
       return NextResponse.json(
         { success: false, message: 'Unauthorized' },
         { status: 401 }
@@ -15,7 +16,7 @@ export async function GET(request: NextRequest) {
     }
 
     const user = await db.user.findUnique({
-      where: { email: session.user.email }
+      where: { email: (session as { user: { email: string } }).user.email }
     });
 
     if (!user) {
@@ -71,9 +72,10 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    // @ts-expect-error - NextAuth v4 compatibility with Next.js 15
     const session = await getServerSession(authOptions);
     
-    if (!session?.user?.email) {
+    if (!session || !(session as { user?: { email?: string } }).user?.email) {
       return NextResponse.json(
         { success: false, message: 'Unauthorized' },
         { status: 401 }
@@ -81,7 +83,7 @@ export async function POST(request: NextRequest) {
     }
 
     const user = await db.user.findUnique({
-      where: { email: session.user.email }
+      where: { email: (session as { user: { email: string } }).user.email }
     });
 
     if (!user) {
@@ -175,11 +177,12 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function DELETE(request: NextRequest) {
+export async function DELETE() {
   try {
+    // @ts-expect-error - NextAuth v4 compatibility with Next.js 15
     const session = await getServerSession(authOptions);
     
-    if (!session?.user?.email) {
+    if (!session || !(session as { user?: { email?: string } }).user?.email) {
       return NextResponse.json(
         { success: false, message: 'Unauthorized' },
         { status: 401 }
@@ -187,7 +190,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     const user = await db.user.findUnique({
-      where: { email: session.user.email }
+      where: { email: (session as { user: { email: string } }).user.email }
     });
 
     if (!user) {

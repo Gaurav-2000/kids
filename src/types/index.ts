@@ -12,6 +12,8 @@ export interface Product {
   featured: boolean;
   categoryId: string;
   category: Category;
+  averageRating?: number;
+  reviewCount?: number;
   createdAt: Date;
   updatedAt: Date;
 }

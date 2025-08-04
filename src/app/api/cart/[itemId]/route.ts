@@ -1,16 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import { db } from '@/lib/db';
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { itemId: string } }
+  { params }: { params: Promise<{ itemId: string }> }
 ) {
   try {
+    // @ts-expect-error - NextAuth v4 compatibility with Next.js 15
     const session = await getServerSession(authOptions);
     
-    if (!session?.user?.email) {
+    if (!session || !(session as { user?: { email?: string } }).user?.email) {
       return NextResponse.json(
         { success: false, message: 'Unauthorized' },
         { status: 401 }
@@ -18,7 +19,7 @@ export async function PUT(
     }
 
     const user = await db.user.findUnique({
-      where: { email: session.user.email }
+      where: { email: (session as { user: { email: string } }).user.email }
     });
 
     if (!user) {
@@ -28,7 +29,7 @@ export async function PUT(
       );
     }
 
-    const { itemId } = params;
+    const { itemId } = await params;
     const { quantity } = await request.json();
 
     if (quantity <= 0) {
@@ -93,12 +94,13 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { itemId: string } }
+  { params }: { params: Promise<{ itemId: string }> }
 ) {
   try {
+    // @ts-expect-error - NextAuth v4 compatibility with Next.js 15
     const session = await getServerSession(authOptions);
     
-    if (!session?.user?.email) {
+    if (!session || !(session as { user?: { email?: string } }).user?.email) {
       return NextResponse.json(
         { success: false, message: 'Unauthorized' },
         { status: 401 }
@@ -106,7 +108,7 @@ export async function DELETE(
     }
 
     const user = await db.user.findUnique({
-      where: { email: session.user.email }
+      where: { email: (session as { user: { email: string } }).user.email }
     });
 
     if (!user) {
@@ -116,7 +118,7 @@ export async function DELETE(
       );
     }
 
-    const { itemId } = params;
+    const { itemId } = await params;
 
     // Verify the cart item belongs to the user
     const cartItem = await db.cartItem.findFirst({

@@ -8,10 +8,10 @@ export default function SessionProvider({
   session,
 }: {
   children: React.ReactNode;
-  session: Session | null;
+  session: Session | null | undefined;
 }) {
   return (
-    <NextAuthSessionProvider session={session}>
+    <NextAuthSessionProvider session={session as Session & { expires: string } | null | undefined}>
       {children}
     </NextAuthSessionProvider>
   );

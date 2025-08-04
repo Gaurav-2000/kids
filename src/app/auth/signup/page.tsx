@@ -78,7 +78,7 @@ const SignUpPage = () => {
       } else {
         setError(data.message || 'Registration failed');
       }
-    } catch (error) {
+    } catch {
       setError('An error occurred. Please try again.');
     } finally {
       setIsLoading(false);

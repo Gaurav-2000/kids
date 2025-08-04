@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { Heart, ShoppingCart, Star, Minus, Plus } from 'lucide-react';
@@ -9,26 +9,11 @@ import Footer from '@/components/layout/Footer';
 import SafeImage from '@/components/ui/SafeImage';
 import { useCart } from '@/contexts/CartContext';
 import { formatPrice, calculateDiscount } from '@/lib/utils';
+import type { Product } from '@/types';
 
-interface Product {
-  id: string;
-  name: string;
-  slug: string;
-  description: string;
-  price: number;
-  salePrice?: number;
-  images: string[];
-  sizes: string[];
-  colors: string[];
-  stock: number;
-  category: {
-    id: string;
-    name: string;
-    slug: string;
-  };
-  averageRating: number;
-  reviewCount: number;
-}
+
+
+
 
 export default function ProductPage() {
   const params = useParams();
@@ -44,9 +29,32 @@ export default function ProductPage() {
   
   const { addItem } = useCart();
 
+  const fetchProduct = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`/api/products/${slug}`);
+      const data = await response.json();
+      if (data.success) {
+        const prod = data.data;
+        if (prod && prod.category) {
+          prod.category = {
+            ...prod.category,
+            createdAt: new Date(prod.category.createdAt),
+            updatedAt: new Date(prod.category.updatedAt),
+          };
+        }
+        setProduct(prod);
+      }
+    } catch (error) {
+      console.error('Error fetching product:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [slug]);
+
   useEffect(() => {
     fetchProduct();
-  }, [slug]);
+  }, [fetchProduct]);
 
   useEffect(() => {
     if (product) {
@@ -55,21 +63,7 @@ export default function ProductPage() {
     }
   }, [product]);
 
-  const fetchProduct = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch(`/api/products/${slug}`);
-      const data = await response.json();
-      
-      if (data.success) {
-        setProduct(data.data);
-      }
-    } catch (error) {
-      console.error('Error fetching product:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+
 
   const handleAddToCart = () => {
     if (!product) return;
@@ -111,7 +105,7 @@ export default function ProductPage() {
         <main className="container mx-auto px-4 py-8">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-gray-900 mb-4">Product Not Found</h1>
-            <p className="text-gray-600 mb-8">The product you're looking for doesn't exist.</p>
+            <p className="text-gray-600 mb-8">The product you&apos;re looking for doesn&apos;t exist.</p>
             <Link href="/collections" className="bg-orange-500 text-white px-6 py-3 rounded-lg hover:bg-orange-600 transition-colors">
               Browse Products
             </Link>
@@ -165,7 +159,7 @@ export default function ProductPage() {
             {/* Image Thumbnails */}
             {product.images.length > 1 && (
               <div className="grid grid-cols-4 gap-2">
-                {product.images.map((image, index) => (
+                {product.images.map((image: string, index: number) => (
                   <button
                     key={index}
                     onClick={() => setSelectedImage(index)}
@@ -198,7 +192,7 @@ export default function ProductPage() {
                     key={i}
                     size={16}
                     className={`${
-                      i < Math.floor(product.averageRating)
+                      i < Math.floor(product.averageRating || 0)
                         ? 'text-yellow-400 fill-current'
                         : 'text-gray-300'
                     }`}
@@ -206,7 +200,7 @@ export default function ProductPage() {
                 ))}
               </div>
               <span className="ml-2 text-sm text-gray-600">
-                ({product.reviewCount} reviews)
+                ({product.reviewCount || 0} reviews)
               </span>
             </div>
 
@@ -236,7 +230,7 @@ export default function ProductPage() {
               <div className="mb-6">
                 <h3 className="text-sm font-medium text-gray-900 mb-3">Size</h3>
                 <div className="flex flex-wrap gap-2">
-                  {product.sizes.map((size) => (
+                  {product.sizes.map((size: string) => (
                     <button
                       key={size}
                       onClick={() => setSelectedSize(size)}
@@ -258,7 +252,7 @@ export default function ProductPage() {
               <div className="mb-6">
                 <h3 className="text-sm font-medium text-gray-900 mb-3">Color</h3>
                 <div className="flex flex-wrap gap-2">
-                  {product.colors.map((color) => (
+                  {product.colors.map((color: string) => (
                     <button
                       key={color}
                       onClick={() => setSelectedColor(color)}

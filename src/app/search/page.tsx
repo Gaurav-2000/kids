@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Filter, Grid, List, Search } from 'lucide-react';
@@ -8,13 +8,9 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import ProductCard from '@/components/product/ProductCard';
 
-interface Product {
-  id: string;
-  name: string;
-  slug: string;
-  price: number;
-  salePrice?: number;
-  images: string[];
+import type { Product as GlobalProduct } from '@/types';
+
+interface Product extends GlobalProduct {
   averageRating: number;
   reviewCount: number;
 }
@@ -34,7 +30,7 @@ interface SearchData {
   query: string;
 }
 
-export default function SearchPage() {
+function SearchPageContent() {
   const searchParams = useSearchParams();
   const query = searchParams.get('q') || '';
   
@@ -50,13 +46,7 @@ export default function SearchPage() {
     maxPrice: ''
   });
 
-  useEffect(() => {
-    if (query) {
-      searchProducts();
-    }
-  }, [query, sortBy, sortOrder, currentPage, filters]);
-
-  const searchProducts = async () => {
+  const searchProducts = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams({
@@ -68,10 +58,8 @@ export default function SearchPage() {
         ...(filters.minPrice && { minPrice: filters.minPrice }),
         ...(filters.maxPrice && { maxPrice: filters.maxPrice })
       });
-      
       const response = await fetch(`/api/search?${params}`);
       const result = await response.json();
-      
       if (result.success) {
         setData(result.data);
       }
@@ -80,7 +68,15 @@ export default function SearchPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [query, sortBy, sortOrder, currentPage, filters]);
+
+  useEffect(() => {
+    if (query) {
+      searchProducts();
+    }
+  }, [query, sortBy, sortOrder, currentPage, filters, searchProducts]);
+
+
 
   const handleSortChange = (newSortBy: string, newSortOrder: string) => {
     setSortBy(newSortBy);
@@ -146,7 +142,7 @@ export default function SearchPage() {
           </nav>
           
           <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            Search Results for "{query}"
+            Search Results for &quot;{query}&quot;
           </h1>
           
           {data && (
@@ -319,7 +315,7 @@ export default function SearchPage() {
                 <Search size={64} className="mx-auto text-gray-300 mb-4" />
                 <h3 className="text-xl font-semibold text-gray-900 mb-4">No products found</h3>
                 <p className="text-gray-600 mb-8">
-                  We couldn't find any products matching "{query}". Try adjusting your search or browse our collections.
+                  We couldn&apos;t find any products matching &quot;{query}&quot;. Try adjusting your search or browse our collections.
                 </p>
                 <Link href="/collections" className="bg-orange-500 text-white px-6 py-3 rounded-lg hover:bg-orange-600 transition-colors">
                   Browse All Products
@@ -332,5 +328,13 @@ export default function SearchPage() {
 
       <Footer />
     </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SearchPageContent />
+    </Suspense>
   );
 }

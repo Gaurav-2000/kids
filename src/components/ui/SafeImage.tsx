@@ -34,7 +34,7 @@ const SafeImage = ({
 
   const imageProps = {
     src: imageSrc,
-    alt,
+    alt: alt || '',
     className,
     priority,
     onError: handleError,
@@ -42,7 +42,7 @@ const SafeImage = ({
     ...(sizes && { sizes })
   };
 
-  return <Image {...imageProps} />;
+  return <Image {...imageProps} alt={alt || ''} />;
 };
 
 export default SafeImage;
