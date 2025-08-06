@@ -77,11 +77,11 @@ export async function seedDatabase() {
     // Create admin user
     const hashedPassword = await bcrypt.hash('admin123', 12);
     await db.user.upsert({
-      where: { email: 'admin@littlestart.com' },
+      where: { email: 'admin@littlestar.com' },
       update: {},
       create: {
         name: 'Admin User',
-        email: 'admin@littlestart.com',
+        email: 'admin@littlestar.com',
         password: hashedPassword,
         role: 'ADMIN'
       }
@@ -421,7 +421,7 @@ export async function seedDatabase() {
     console.log('🎉 Database seeding completed successfully!');
     console.log('');
     console.log('📋 Login Credentials:');
-    console.log('Admin: admin@littlestart.com / admin123');
+    console.log('Admin: admin@littlestar.com / admin123');
     console.log('Test User: test@example.com / password123');
     console.log('');
 

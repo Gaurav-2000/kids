@@ -32,16 +32,16 @@ const Footer = () => {
             <Link href="/" className="inline-block mb-4">
               <SafeImage
                 src="/images/footer-logo.png"
-                alt="Little Star"
+                alt="Nap Chief"
                 width={120}
                 height={48}
                 className="h-12 w-auto"
-                fallbackSrc="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjQ4IiB2aWV3Qm94PSIwIDAgMTIwIDQ4IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8dGV4dCB4PSI2MCIgeT0iMjgiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5MaXR0bGUgU3RhcjwvdGV4dD4KPC9zdmc+Cg=="
+                fallbackSrc="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjQ4IiB2aWV3Qm94PSIwIDAgMTIwIDQ4IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8dGV4dCB4PSI2MCIgeT0iMjgiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5OYXAgQ2hpZWY8L3RleHQ+Cjwvc3ZnPgo="
               />
             </Link>
             <h4 className="text-lg font-semibold mb-3">Our mission</h4>
             <p className="text-gray-300 text-sm leading-relaxed">
-              Little Star is a 100% made in India brand that aims to deliver fun, vibrant & high quality clothing to families across the World! Come be a part of our Story
+              We are a 100% made in India brand that aims to deliver fun, vibrant & high quality clothing to families across the World! Come be a part of our Story
             </p>
           </div>
 
@@ -146,7 +146,7 @@ const Footer = () => {
         <div className="border-t border-gray-700 mt-8 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="mb-4 md:mb-0">
-              <h4 className="text-lg font-semibold mb-2">Follow Us @LittleStart_Official</h4>
+              <h4 className="text-lg font-semibold mb-2">Follow Us @NapChief_Official</h4>
               <div className="flex space-x-4">
                 <a href="#" className="text-gray-300 hover:text-white transition-colors">
                   <Facebook size={24} />
@@ -176,7 +176,7 @@ const Footer = () => {
         <div className="border-t border-gray-700 mt-8 pt-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
             <div>
-              <div className="text-sm font-medium">Kid&#39;s Favourite Characters</div>
+              <div className="text-sm font-medium">Kid's Favourite Characters</div>
             </div>
             <div>
               <div className="text-sm font-medium">Made Proudly in India</div>

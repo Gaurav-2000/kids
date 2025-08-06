@@ -8,6 +8,7 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import SafeImage from '@/components/ui/SafeImage';
 import { useCart } from '@/contexts/CartContext';
+import { useWishlist } from '@/contexts/WishlistContext';
 import { formatPrice, calculateDiscount } from '@/lib/utils';
 import type { Product } from '@/types';
 
@@ -25,9 +26,8 @@ export default function ProductPage() {
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
   const [quantity, setQuantity] = useState(1);
-  const [isWishlisted, setIsWishlisted] = useState(false);
-  
   const { addItem } = useCart();
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
 
   const fetchProduct = useCallback(async () => {
     try {
@@ -72,7 +72,13 @@ export default function ProductPage() {
   };
 
   const handleWishlistToggle = () => {
-    setIsWishlisted(!isWishlisted);
+    if (!product) return;
+
+    if (isInWishlist(product.id)) {
+      removeFromWishlist(product.id);
+    } else {
+      addToWishlist(product);
+    }
   };
 
   if (loading) {
@@ -307,7 +313,7 @@ export default function ProductPage() {
                 <Heart
                   size={20}
                   className={`${
-                    isWishlisted ? 'fill-red-500 text-red-500' : 'text-gray-600'
+                    product && isInWishlist(product.id) ? 'fill-red-500 text-red-500' : 'text-gray-600'
                   } transition-colors`}
                 />
               </button>
