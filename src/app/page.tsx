@@ -356,7 +356,11 @@ export default function Home() {
             {/* Products Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {getCurrentProducts().slice(0, 8).map((product) => (
-                <ProductCard key={product.id} product={product} />
+                <ProductCard key={product.id} product={{
+                  ...product,
+                  salePrice: product.salePrice && product.salePrice > 0 ? product.salePrice : undefined,
+                  images: Array.isArray(product.images) && product.images.length > 0 ? product.images : ['/images/placeholder.jpg']
+                }} />
               ))}
             </div>
 
@@ -520,7 +524,11 @@ export default function Home() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {newArrivalsProducts.slice(0, 8).map((product) => (
-                <ProductCard key={product.id} product={product} />
+                <ProductCard key={product.id} product={{
+                  ...product,
+                  salePrice: product.salePrice && product.salePrice > 0 ? product.salePrice : undefined,
+                  images: Array.isArray(product.images) && product.images.length > 0 ? product.images : ['/images/placeholder.jpg']
+                }} />
               ))}
             </div>
 
@@ -601,9 +609,17 @@ export default function Home() {
                   <Link href={`/products/${product.slug}`}>
                     <div className="relative aspect-square">
                       {product.salePrice && (
-                        <div className="absolute top-2 left-2 z-10 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
-                          {product.discount || Math.round(((product.price - product.salePrice) / product.price) * 100)}% Off
-                        </div>
+                        (() => {
+                          const discount = product.discount || Math.round(((product.price - product.salePrice) / product.price) * 100);
+                          if (discount > 0) {
+                            return (
+                              <div className="absolute top-2 left-2 z-10 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
+                                {discount}% Off
+                              </div>
+                            );
+                          }
+                          return null;
+                        })()
                       )}
                       <QuickAddButton
                         productId={product.id}

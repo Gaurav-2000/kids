@@ -146,9 +146,6 @@ const ProductCard = ({ product, viewMode = 'grid' }: ProductCardProps) => {
             </div>
           )}
 
-          {/* Remove accidental 0/00 rendering at the top */}
-          {/* No value should be rendered here. If you see 0/00, check parent or mapping code. */}
-
           {/* Sale Badge */}
           {hasDiscount && (
             <div className="absolute top-2 right-2 z-10 bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded">

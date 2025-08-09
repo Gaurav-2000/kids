@@ -4,21 +4,24 @@ import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Mail, CheckCircle, ArrowLeft } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 
 const SignUpPage = () => {
+  const [step, setStep] = useState<'form' | 'otp' | 'success'>('form');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
     confirmPassword: ''
   });
+  const [otp, setOtp] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   const router = useRouter();
 
@@ -31,10 +34,17 @@ const SignUpPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
     setError('');
+    setSuccess('');
+    setIsLoading(true);
 
     // Validation
+    if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
+      setError('All fields are required');
+      setIsLoading(false);
+      return;
+    }
+
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
       setIsLoading(false);
@@ -48,37 +58,113 @@ const SignUpPage = () => {
     }
 
     try {
-      const response = await fetch('/api/auth/register', {
+      // Send OTP to email
+      const response = await fetch('/api/auth/send-otp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          name: formData.name,
           email: formData.email,
-          password: formData.password,
+          type: 'signup'
         }),
       });
 
       const data = await response.json();
 
-      if (data.success) {
-        // Auto sign in after successful registration
-        const result = await signIn('credentials', {
-          email: formData.email,
-          password: formData.password,
-          redirect: false,
-        });
-
-        if (result?.ok) {
-          router.push('/');
-        } else {
-          router.push('/auth/signin?message=Registration successful, please sign in');
-        }
+      if (response.ok) {
+        setSuccess('Verification code sent to your email!');
+        setStep('otp');
       } else {
-        setError(data.message || 'Registration failed');
+        setError(data.message || 'Failed to send verification code');
       }
-    } catch {
+    } catch (error) {
+      setError('An error occurred. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleOTPSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setIsLoading(true);
+
+    if (!otp || otp.length !== 6) {
+      setError('Please enter a valid 6-digit verification code');
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/auth/verify-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          otp,
+          name: formData.name,
+          password: formData.password,
+          type: 'signup'
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setStep('success');
+        setSuccess('Account created successfully!');
+
+        // Auto sign in after successful registration
+        setTimeout(async () => {
+          const result = await signIn('credentials', {
+            email: formData.email,
+            password: formData.password,
+            redirect: false,
+          });
+
+          if (result?.ok) {
+            router.push('/');
+          } else {
+            router.push('/auth/signin');
+          }
+        }, 2000);
+      } else {
+        setError(data.message || 'Invalid verification code');
+      }
+    } catch (error) {
+      setError('An error occurred. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleResendOTP = async () => {
+    setError('');
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('/api/auth/send-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          type: 'signup'
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSuccess('New verification code sent!');
+      } else {
+        setError(data.message || 'Failed to resend verification code');
+      }
+    } catch (error) {
       setError('An error occurred. Please try again.');
     } finally {
       setIsLoading(false);
@@ -89,21 +175,39 @@ const SignUpPage = () => {
     signIn('google', { callbackUrl: '/' });
   };
 
+
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
       <main className="container mx-auto px-4 py-12">
         <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-8">
           <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">Create Account</h1>
-            <p className="text-gray-600">Join Nap Chief family today</p>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              {step === 'form' && 'Create Account'}
+              {step === 'otp' && 'Verify Your Email'}
+              {step === 'success' && 'Welcome to Little Star!'}
+            </h1>
+            <p className="text-gray-600">
+              {step === 'form' && 'Join Little Star family today'}
+              {step === 'otp' && `We sent a code to ${formData.email}`}
+              {step === 'success' && 'Your account has been created successfully'}
+            </p>
           </div>
 
-          {error && (
-            <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-              {error}
-            </div>
-          )}
+          {step === 'form' && (
+            <>
+              {error && (
+                <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+                  {error}
+                </div>
+              )}
+
+              {success && (
+                <div className="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded">
+                  {success}
+                </div>
+              )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
@@ -221,7 +325,7 @@ const SignUpPage = () => {
               disabled={isLoading}
               className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 text-white font-medium py-2 px-4 rounded-lg transition-colors"
             >
-              {isLoading ? 'Creating Account...' : 'Create Account'}
+              {isLoading ? 'Sending Code...' : 'Send Verification Code'}
             </button>
           </form>
 
@@ -250,8 +354,93 @@ const SignUpPage = () => {
               </button>
             </div>
           </div>
+            </>
+          )}
 
-          <div className="mt-6 text-center">
+          {step === 'otp' && (
+            <>
+              <div className="text-center mb-6">
+                <Mail className="mx-auto h-12 w-12 text-orange-500 mb-4" />
+                <p className="text-sm text-gray-600">
+                  Enter the 6-digit code we sent to your email
+                </p>
+              </div>
+
+              {error && (
+                <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+                  {error}
+                </div>
+              )}
+
+              {success && (
+                <div className="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded">
+                  {success}
+                </div>
+              )}
+
+              <form onSubmit={handleOTPSubmit} className="space-y-4">
+                <div>
+                  <input
+                    type="text"
+                    maxLength={6}
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
+                    className="w-full px-4 py-3 text-center text-lg font-mono tracking-widest border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                    placeholder="000000"
+                    required
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isLoading || otp.length !== 6}
+                  className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+                >
+                  {isLoading ? 'Verifying...' : 'Verify & Create Account'}
+                </button>
+
+                <div className="flex justify-between items-center">
+                  <button
+                    type="button"
+                    onClick={() => setStep('form')}
+                    className="flex items-center text-sm text-gray-600 hover:text-gray-900"
+                  >
+                    <ArrowLeft className="w-4 h-4 mr-1" />
+                    Back
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleResendOTP}
+                    disabled={isLoading}
+                    className="text-sm text-orange-600 hover:text-orange-500 disabled:opacity-50"
+                  >
+                    Resend code
+                  </button>
+                </div>
+              </form>
+            </>
+          )}
+
+          {step === 'success' && (
+            <div className="text-center space-y-6">
+              <CheckCircle className="mx-auto h-16 w-16 text-green-500" />
+              <div>
+                <p className="text-gray-600">
+                  Welcome to Little Star! You'll be redirected shortly.
+                </p>
+              </div>
+
+              {success && (
+                <div className="p-3 bg-green-100 border border-green-400 text-green-700 rounded">
+                  {success}
+                </div>
+              )}
+            </div>
+          )}
+
+          {step === 'form' && (
+            <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
               Already have an account?{' '}
               <Link href="/auth/signin" className="font-medium text-orange-600 hover:text-orange-500">
@@ -259,6 +448,7 @@ const SignUpPage = () => {
               </Link>
             </p>
           </div>
+          )}
         </div>
       </main>
       <Footer />

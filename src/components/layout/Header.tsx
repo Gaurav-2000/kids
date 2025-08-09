@@ -33,15 +33,32 @@ const Header = () => {
   return (
     <>
       {/* Promotional Banner */}
-      <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white text-center py-3 text-sm font-medium shadow-sm">
-        <div className="container mx-auto px-4">
-          <span className="inline-flex items-center">
-            <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-            </svg>
-            Easy 7 day exchanges
-          </span>
+      <div className="relative overflow-hidden">
+        <div className="promotion-bar-animated relative overflow-hidden py-3 shadow-lg rounded-b-xl mx-auto w-full max-w-full">
+          <div className="absolute w-full h-full top-0 left-0 flex items-center">
+            <div className="promotion-bar-marquee whitespace-nowrap flex items-center animate-marquee-rtl w-max">
+              <span className="inline-flex items-center text-[#fff8e1] font-bold text-base tracking-wide px-4">
+                <svg className="w-5 h-5 mr-2 text-yellow-300 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                Free Express Shipping on All Orders – Shop the Luxury Collection Now!
+              </span>
+            </div>
+          </div>
         </div>
+        <style jsx>{`
+          .promotion-bar-animated {
+            background: linear-gradient(90deg, #3a2c0f 0%, #bfa14a 60%, #fff8e1 100%);
+            box-shadow: 0 4px 24px 0 rgba(191, 161, 74, 0.18), 0 1.5px 0 #fff8e1 inset;
+          }
+          @keyframes marquee-rtl {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+          }
+          .promotion-bar-marquee {
+            animation: marquee-rtl 12s linear infinite;
+          }
+        `}</style>
       </div>
 
       {/* Main Header */}

@@ -146,7 +146,7 @@ const Footer = () => {
         <div className="border-t border-gray-700 mt-8 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="mb-4 md:mb-0">
-              <h4 className="text-lg font-semibold mb-2">Follow Us @LittleStart_Official</h4>
+              <h4 className="text-lg font-semibold mb-2">Follow Us @LittleStar_Official</h4>
               <div className="flex space-x-4">
                 <a href="#" className="text-gray-300 hover:text-white transition-colors">
                   <Facebook size={24} />
@@ -164,9 +164,22 @@ const Footer = () => {
             </div>
             <div className="text-center">
               <Link href="/reviews" className="text-gray-300 hover:text-white transition-colors">
-                <div className="text-sm">Customers rate us</div>
-                <div className="text-xl font-bold text-yellow-400">4.9/5</div>
-                <div className="text-sm">based on 700 reviews</div>
+                <div className="overflow-hidden w-56 mx-auto">
+                  <div className="flex animate-move-ltr whitespace-nowrap">
+                    <div className="text-sm mr-2">Customers rate us</div>
+                    <div className="text-xl font-bold text-yellow-400 mr-2">4.9/5</div>
+                    <div className="text-sm">based on 700 reviews</div>
+                  </div>
+                </div>
+                <style jsx>{`
+                  @keyframes move-ltr {
+                    0% { transform: translateX(-100%); }
+                    100% { transform: translateX(100%); }
+                  }
+                  .animate-move-ltr {
+                    animation: move-ltr 6s linear infinite;
+                  }
+                `}</style>
               </Link>
             </div>
           </div>
@@ -192,7 +205,7 @@ const Footer = () => {
 
         {/* Copyright */}
         <div className="border-t border-gray-700 mt-8 pt-8 text-center text-sm text-gray-400">
-          <p>&copy; 2024 Nap Chief. All rights reserved.</p>
+          <p>&copy; 2024 Little Star. All rights reserved.</p>
         </div>
       </div>
     </footer>
